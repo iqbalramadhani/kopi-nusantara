@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kopi Nusantara — Cafe & Roastery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0f0b08;
+            --bg-warm: #1a1410;
+            --card: #231c14;
+            --card-hover: #2e2519;
+            --border: #3d3226;
+            --fg: #f5efe6;
+            --fg-muted: #a89882;
+            --accent: #d4a24e;
+            --accent-glow: #e8b85a;
+            --accent-dark: #a67c30;
+            --success: #5cb85c;
+            --danger: #d9534f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            overflow-x: hidden;
+        }
+
+        .font-display { font-family: 'Playfair Display', serif; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-dark); border-radius: 3px; }
+
+        .hero-bg {
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(212,162,78,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(166,124,48,0.1) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 80%, rgba(212,162,78,0.08) 0%, transparent 50%),
+                linear-gradient(180deg, #0f0b08 0%, #1a1410 50%, #0f0b08 100%);
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle 8s infinite ease-in-out;
+        }
+
+        @keyframes floatParticle {
+            0%, 100% { opacity: 0; transform: translateY(0) scale(0); }
+            10% { opacity: 0.6; transform: scale(1); }
+            90% { opacity: 0.3; }
+            100% { opacity: 0; transform: translateY(-400px) scale(0); }
+        }
+
+        .steam {
+            position: absolute;
+            width: 8px;
+            background: rgba(212,162,78,0.3);
+            border-radius: 50%;
+            filter: blur(3px);
+            animation: steamRise 3s infinite ease-out;
+        }
+
+        @keyframes steamRise {
+            0% { opacity: 0; transform: translateY(0) scaleX(1); }
+            15% { opacity: 0.5; }
+            50% { opacity: 0.3; transform: translateY(-60px) scaleX(1.5); }
+            100% { opacity: 0; transform: translateY(-120px) scaleX(2); }
+        }
+
+        .text-glow {
+            text-shadow: 0 0 40px rgba(212,162,78,0.3), 0 0 80px rgba(212,162,78,0.1);
+        }
+
+        .menu-card {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 1px solid var(--border);
+        }
+        .menu-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-dark);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(212,162,78,0.08);
+        }
+        .menu-card:hover .card-img { transform: scale(1.08); }
+        .card-img { transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: var(--bg);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .btn-primary:hover::after { opacity: 1; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,162,78,0.3); }
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-outline {
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            background: transparent;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            background: rgba(212,162,78,0.1);
+            transform: translateY(-2px);
+        }
+
+        .cat-tab {
+            padding: 10px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            font-weight: 500;
+            color: var(--fg-muted);
+            background: transparent;
+        }
+        .cat-tab:hover { color: var(--fg); border-color: var(--border); }
+        .cat-tab.active {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+        .cart-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 420px;
+            max-width: 100vw;
+            height: 100vh;
+            background: var(--bg-warm);
+            border-left: 1px solid var(--border);
+            z-index: 101;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-panel.open { transform: translateX(0); }
+
+        .checkout-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .checkout-overlay.open { opacity: 1; pointer-events: all; }
+
+        .checkout-modal {
+            background: var(--bg-warm);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 600px;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .checkout-overlay.open .checkout-modal { transform: scale(1) translateY(0); }
+
+        .step-item { display: flex; align-items: center; gap: 10px; }
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            border: 2px solid var(--border);
+            color: var(--fg-muted);
+            transition: all 0.4s ease;
+            flex-shrink: 0;
+        }
+        .step-item.active .step-circle { border-color: var(--accent); background: var(--accent); color: var(--bg); }
+        .step-item.done .step-circle { border-color: var(--success); background: var(--success); color: white; }
+        .step-label { font-size: 13px; color: var(--fg-muted); transition: color 0.3s; }
+        .step-item.active .step-label { color: var(--accent); font-weight: 600; }
+        .step-item.done .step-label { color: var(--success); }
+        .step-line { flex: 1; height: 2px; background: var(--border); transition: background 0.4s; margin: 0 8px; }
+        .step-line.done { background: var(--success); }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--fg);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+        .form-input:focus { border-color: var(--accent); }
+        .form-input::placeholder { color: var(--fg-muted); opacity: 0.6; }
+
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            padding: 14px 20px;
+            border-radius: 12px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--fg);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn 0.4s ease, toastOut 0.4s ease 2.6s forwards;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            max-width: 360px;
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100px); } }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 16px 0;
+            transition: all 0.4s ease;
+        }
+        .navbar.scrolled {
+            background: rgba(15,11,8,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 0;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .cart-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        .cart-badge.bump { animation: badgeBump 0.3s ease; }
+        @keyframes badgeBump { 0%,100% { transform: scale(1); } 50% { transform: scale(1.4); } }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--fg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        .qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        .radio-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .radio-card:hover { border-color: var(--accent-dark); }
+        .radio-card.selected { border-color: var(--accent); background: rgba(212,162,78,0.08); }
+        .radio-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .radio-card.selected .radio-dot { border-color: var(--accent); }
+        .radio-dot::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            transform: scale(0);
+            transition: transform 0.3s;
+        }
+        .radio-card.selected .radio-dot::after { transform: scale(1); }
+
+        .success-check {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes successPop { from { transform: scale(0); } to { transform: scale(1); } }
+
+        .checkmark-svg { width: 40px; height: 40px; }
+        .checkmark-svg path {
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            stroke-dasharray: 50;
+            stroke-dashoffset: 50;
+            animation: drawCheck 0.5s 0.3s ease forwards;
+        }
+        @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,11,8,0.98);
+            backdrop-filter: blur(20px);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .mobile-menu.open { opacity: 1; pointer-events: all; }
+        .mobile-menu a {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--fg);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .mobile-menu a:hover { color: var(--accent); }
+
+        html { scroll-behavior: smooth; }
+
+        .publish-banner {
+            background: linear-gradient(135deg, rgba(92,184,92,0.15), rgba(92,184,92,0.05));
+            border: 1px solid rgba(92,184,92,0.3);
+            border-radius: 16px;
+        }
+
+        .wa-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            z-index: 40;
+            box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            animation: waFloatPulse 2s infinite;
+        }
+        .wa-float:hover {
+            transform: scale(1.12);
+            box-shadow: 0 6px 30px rgba(37,211,102,0.6);
+        }
+        @keyframes waFloatPulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
+            50% { box-shadow: 0 4px 30px rgba(37,211,102,0.65); }
+        }
+
+        .wa-float-tooltip {
+            position: fixed;
+            bottom: 94px;
+            right: 28px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--fg);
+            font-size: 12px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(8px);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        .wa-float-tooltip.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+        .promo-banner {
+            background: linear-gradient(135deg, rgba(212,162,78,0.12) 0%, rgba(166,124,48,0.06) 100%);
+            border: 2px solid var(--accent-dark);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212,162,78,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .promo-badge-float {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 50px;
+            animation: promoPulse 1.5s infinite;
+            z-index: 2;
+        }
+        @keyframes promoPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .promo-item-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            flex: 1;
+            min-width: 0;
+        }
+        .price-strike {
+            text-decoration: line-through;
+            color: var(--fg-muted);
+            opacity: 0.6;
+        }
+        .cart-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .cart-item-unchecked { opacity: 0.45; }
+        .cart-item-unchecked:hover { opacity: 0.7; }
+
+        @media (max-width: 640px) {
+            .cart-panel { width: 100vw; }
+            .promo-items-row { flex-direction: column !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <a href="https://wa.me/6289526804797?text=Halo%20Kopi%20Nusantara%2C%20saya%20mau%20pesan" target="_blank" class="wa-float" id="waFloat" aria-label="Chat WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <div class="wa-float-tooltip" id="waTooltip">Chat kami di WhatsApp!</div>
+
+    <nav class="navbar" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+            <a href="#beranda" class="flex items-center gap-3">
+                <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-mug-hot" style="color:var(--bg);font-size:18px;"></i>
+                </div>
+                <span class="font-display text-xl font-bold" style="color:var(--fg);">Kopi Nusantara</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#beranda" class="text-sm font-medium hover:text-[var(--accent)] transition-colors" style="color:var(--fg-muted);">Beranda</a>
+                <a href="#tentang" class="text-sm font-medium hover:text-[var(--accent)] transition-colors" style="color:var(--fg-muted);">Tentang</a>
+                <a href="#menu" class="text-sm font-medium hover:text-[var(--accent)] transition-colors" style="color:var(--fg-muted);">Menu</a>
+                <a href="#galeri" class="text-sm font-medium hover:text-[var(--accent)] transition-colors" style="color:var(--fg-muted);">Galeri</a>
+                <a href="#kontak" class="text-sm font-medium hover:text-[var(--accent)] transition-colors" style="color:var(--fg-muted);">Kontak</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="openCart()" class="relative p-2 hover:text-[var(--accent)] transition-colors" style="color:var(--fg);">
+                    <i class="fas fa-shopping-bag text-lg"></i>
+                    <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+                </button>
+                <button class="md:hidden p-2" onclick="toggleMobileMenu()" style="color:var(--fg);">
+                    <i class="fas fa-bars text-lg" id="menuIcon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <button onclick="toggleMobileMenu()" style="position:absolute;top:20px;right:24px;color:var(--fg);font-size:24px;background:none;border:none;cursor:pointer;">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="#beranda" onclick="toggleMobileMenu()">Beranda</a>
+        <a href="#tentang" onclick="toggleMobileMenu()">Tentang</a>
+        <a href="#menu" onclick="toggleMobileMenu()">Menu</a>
+        <a href="#galeri" onclick="toggleMobileMenu()">Galeri</a>
+        <a href="#kontak" onclick="toggleMobileMenu()">Kontak</a>
+    </div>
+
+    <section id="beranda" class="hero-bg relative min-h-screen flex items-center overflow-hidden">
+        <div id="particles" class="absolute inset-0 pointer-events-none"></div>
+        <div class="absolute bottom-32 right-10 md:right-32 hidden md:block" style="width:60px;height:80px;">
+            <div class="steam" style="left:10px;animation-delay:0s;"></div>
+            <div class="steam" style="left:25px;animation-delay:0.8s;"></div>
+            <div class="steam" style="left:40px;animation-delay:1.6s;"></div>
+            <i class="fas fa-mug-hot absolute bottom-0 left-0 text-6xl" style="color:rgba(212,162,78,0.15);"></i>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 pt-24 pb-16 relative z-10 w-full">
+            <div class="max-w-3xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <div style="width:40px;height:1px;background:var(--accent);"></div>
+                    <span class="text-sm font-medium tracking-widest uppercase" style="color:var(--accent);">Est. 2019</span>
+                </div>
+                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-900 leading-[0.95] mb-6 text-glow" style="color:var(--fg);">
+                    Racikan<br>
+                    <span style="color:var(--accent);">Kopi</span> Terbaik<br>
+                    Nusantara
+                </h1>
+                <p class="text-lg md:text-xl mb-10 max-w-xl leading-relaxed" style="color:var(--fg-muted);">
+                    Nikmati pengalaman kopi autentik dari biji pilihan petani lokal Indonesia. Setiap cangkir adalah cerita dari tanah negeri ini.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#menu" class="btn-primary px-8 py-4 rounded-full text-sm inline-flex items-center gap-2">
+                        Lihat Menu <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#tentang" class="btn-outline px-8 py-4 rounded-full text-sm inline-flex items-center gap-2">
+                        Tentang Kami
+                    </a>
+                </div>
+                <div class="flex gap-10 mt-14">
+                    <div>
+                        <div class="font-display text-3xl font-bold" style="color:var(--accent);" data-count="15">0</div>
+                        <div class="text-xs mt-1" style="color:var(--fg-muted);">Varian Kopi</div>
+                    </div>
+                    <div>
+                        <div class="font-display text-3xl font-bold" style="color:var(--accent);" data-count="5000">0</div>
+                        <div class="text-xs mt-1" style="color:var(--fg-muted);">Cangkir/Bulan</div>
+                    </div>
+                    <div>
+                        <div class="font-display text-3xl font-bold" style="color:var(--accent);" data-count="4.9">0</div>
+                        <div class="text-xs mt-1" style="color:var(--fg-muted);">Rating Google</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+            <span class="text-xs" style="color:var(--fg-muted);">Scroll</span>
+            <i class="fas fa-chevron-down text-xs" style="color:var(--accent);"></i>
+        </div>
+    </section>
+
+    <section id="tentang" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&h=700&fit=crop&auto=format&q=80" alt="Tentang Kami" class="rounded-2xl w-full h-[500px] object-cover" style="border:1px solid var(--border);">
+                        <div class="absolute -bottom-6 -right-6 p-6 rounded-2xl" style="background:var(--card);border:1px solid var(--border);">
+                            <div class="font-display text-3xl font-bold" style="color:var(--accent);">5+</div>
+                            <div class="text-xs mt-1" style="color:var(--fg-muted);">Tahun Pengalaman</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div style="width:40px;height:1px;background:var(--accent);"></div>
+                        <span class="text-sm font-medium tracking-widest uppercase" style="color:var(--accent);">Cerita Kami</span>
+                    </div>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6" style="color:var(--fg);">
+                        Dari Biji<br>Hingga Cangkir
+                    </h2>
+                    <p class="mb-6 leading-relaxed" style="color:var(--fg-muted);">
+                        Kopi Nusantara lahir dari kecintaan mendalam terhadap kopi Indonesia. Kami bekerja langsung dengan petani kopi di berbagai daerah — dari Gayo, Toraja, hingga Kintamani — untuk menghadirkan biji kopi berkualitas terbaik.
+                    </p>
+                    <p class="mb-8 leading-relaxed" style="color:var(--fg-muted);">
+                        Setiap biji dipilih secara selektif, di-roast dengan presisi, dan diseduh oleh barista berpengalaman untuk menghasilkan secangkir kopi yang sempurna.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-leaf mt-1" style="color:var(--accent);"></i>
+                            <div>
+                                <div class="text-sm font-semibold mb-1" style="color:var(--fg);">100% Arabika</div>
+                                <div class="text-xs" style="color:var(--fg-muted);">Biji pilihan grade A</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-fire mt-1" style="color:var(--accent);"></i>
+                            <div>
+                                <div class="text-sm font-semibold mb-1" style="color:var(--fg);">Fresh Roasted</div>
+                                <div class="text-xs" style="color:var(--fg-muted);">Roast harian di tempat</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-handshake mt-1" style="color:var(--accent);"></i>
+                            <div>
+                                <div class="text-sm font-semibold mb-1" style="color:var(--fg);">Fair Trade</div>
+                                <div class="text-xs" style="color:var(--fg-muted);">Menghargai petani</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-heart mt-1" style="color:var(--accent);"></i>
+                            <div>
+                                <div class="text-sm font-semibold mb-1" style="color:var(--fg);">Dibuat Cinta</div>
+                                <div class="text-xs" style="color:var(--fg-muted);">Setiap cangkir istimewa</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="py-24 relative" style="background:var(--bg-warm);">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-14 reveal">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div style="width:40px;height:1px;background:var(--accent);"></div>
+                    <span class="text-sm font-medium tracking-widest uppercase" style="color:var(--accent);">Menu Kami</span>
+                    <div style="width:40px;height:1px;background:var(--accent);"></div>
+                </div>
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-4" style="color:var(--fg);">
+                    Pilihan Favorit
+                </h2>
+                <p class="max-w-lg mx-auto" style="color:var(--fg-muted);">
+                    Temukan beragam pilihan kopi, makanan, dan minuman yang kami sajikan dengan penuh cinta
+                </p>
+            </div>
+
+            <div class="promo-banner p-6 md:p-8 mb-12 reveal">
+                <div class="promo-badge-float"><i class="fas fa-tag mr-1"></i> PROMO</div>
+                <div class="flex flex-col md:flex-row items-center gap-6 relative z-1">
+                    <div class="flex-1 text-center md:text-left">
+                        <h3 class="font-display text-2xl md:text-3xl font-bold mb-2" style="color:var(--fg);">Paket Hemat Best Seller</h3>
+                        <p class="text-sm mb-4" style="color:var(--fg-muted);">Dua menu favorit dalam satu paket lengkap, hemat lebih banyak!</p>
+                        <div class="flex items-center justify-center md:justify-start gap-3 mb-1">
+                            <span class="font-display text-3xl md:text-4xl font-bold" style="color:var(--accent);">Rp 30.000</span>
+                            <span class="price-strike text-sm">Rp 42.000</span>
+                        </div>
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4" style="background:rgba(217,83,79,0.15);color:var(--danger);border:1px solid rgba(217,83,79,0.3);">Hemat Rp 12.000</span>
+                        <div class="mt-2">
+                            <button onclick="addPromoToCart()" class="btn-primary px-6 py-3 rounded-xl text-sm inline-flex items-center gap-2">
+                                <i class="fas fa-cart-plus"></i> Tambah Paket ke Keranjang
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 promo-items-row" style="flex: 1.2;">
+                        <div class="promo-item-card">
+                            <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&h=180&fit=crop&auto=format&q=80" alt="Lemon Tea" class="w-full h-28 md:h-32 object-cover">
+                            <div class="p-3">
+                                <div class="text-sm font-semibold" style="color:var(--fg);">Es Lemon Tea</div>
+                                <div class="text-xs price-strike">Rp 20.000</div>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:var(--accent);color:var(--bg);font-weight:700;font-size:18px;">+</div>
+                        </div>
+                        <div class="promo-item-card">
+                            <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=300&h=180&fit=crop&auto=format&q=80" alt="Mie Rebus" class="w-full h-28 md:h-32 object-cover">
+                            <div class="p-3">
+                                <div class="text-sm font-semibold" style="color:var(--fg);">Indomie Rebus Spesial</div>
+                                <div class="text-xs price-strike">Rp 22.000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3 mb-12 reveal">
+                <button class="cat-tab active" onclick="filterMenu('semua', this)">Semua</button>
+                <button class="cat-tab" onclick="filterMenu('kopi', this)">Kopi</button>
+                <button class="cat-tab" onclick="filterMenu('non-kopi', this)">Non-Kopi</button>
+                <button class="cat-tab" onclick="filterMenu('makanan', this)">Makanan</button>
+                <button class="cat-tab" onclick="filterMenu('dessert', this)">Dessert</button>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="menuGrid"></div>
+        </div>
+    </section>
+
+    <section id="galeri" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-14 reveal">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div style="width:40px;height:1px;background:var(--accent);"></div>
+                    <span class="text-sm font-medium tracking-widest uppercase" style="color:var(--accent);">Galeri</span>
+                    <div style="width:40px;height:1px;background:var(--accent);"></div>
+                </div>
+                <h2 class="font-display text-4xl md:text-5xl font-bold" style="color:var(--fg);">
+                    Suasana Cafe
+                </h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 reveal">
+                <div class="row-span-2 rounded-2xl overflow-hidden" style="border:1px solid var(--border);">
+                    <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=800&fit=crop&auto=format&q=80" alt="Galeri" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                </div>
+                <div class="rounded-2xl overflow-hidden" style="border:1px solid var(--border);">
+                    <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=400&fit=crop&auto=format&q=80" alt="Galeri" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                </div>
+                <div class="rounded-2xl overflow-hidden" style="border:1px solid var(--border);">
+                    <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=400&fit=crop&auto=format&q=80" alt="Galeri" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                </div>
+                <div class="row-span-2 rounded-2xl overflow-hidden" style="border:1px solid var(--border);">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=800&fit=crop&auto=format&q=80" alt="Galeri" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                </div>
+                <div class="col-span-2 rounded-2xl overflow-hidden" style="border:1px solid var(--border);">
+                    <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=800&h=400&fit=crop&auto=format&q=80" alt="Galeri" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="kontak" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16">
+                <div class="reveal">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div style="width:40px;height:1px;background:var(--accent);"></div>
+                        <span class="text-sm font-medium tracking-widest uppercase" style="color:var(--accent);">Kontak</span>
+                    </div>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6" style="color:var(--fg);">
+                        Kunjungi Kami
+                    </h2>
+                    <p class="mb-10 leading-relaxed" style="color:var(--fg-muted);">
+                        Kami selalu senang menyambut Anda. Datang saja langsung atau hubungi kami untuk reservasi.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(212,162,78,0.1);border:1px solid rgba(212,162,78,0.2);">
+                                <i class="fas fa-map-marker-alt" style="color:var(--accent);"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold mb-1" style="color:var(--fg);">Alamat</div>
+                                <div class="text-sm" style="color:var(--fg-muted);">Jl. Kopi Nusantara No. 88, Jakarta Selatan</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(212,162,78,0.1);border:1px solid rgba(212,162,78,0.2);">
+                                <i class="fas fa-clock" style="color:var(--accent);"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold mb-1" style="color:var(--fg);">Jam Operasional</div>
+                                <div class="text-sm" style="color:var(--fg-muted);">Senin - Jumat: 07.00 - 22.00</div>
+                                <div class="text-sm" style="color:var(--fg-muted);">Sabtu - Minggu: 08.00 - 23.00</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(212,162,78,0.1);border:1px solid rgba(212,162,78,0.2);">
+                                <i class="fas fa-phone" style="color:var(--accent);"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold mb-1" style="color:var(--fg);">Telepon</div>
+                                <div class="text-sm" style="color:var(--fg-muted);">089526804797</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(212,162,78,0.1);border:1px solid rgba(212,162,78,0.2);">
+                                <i class="fab fa-instagram" style="color:var(--accent);"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold mb-1" style="color:var(--fg);">Instagram</div>
+                                <div class="text-sm" style="color:var(--fg-muted);">@kopinusantara.id</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal">
+                    <div class="rounded-2xl overflow-hidden h-[400px]" style="border:1px solid var(--border);">
+                        <img src="https://images.unsplash.com/photo-1525610553991-2bede1a236e2?w=600&h=400&fit=crop&auto=format&q=80" alt="Lokasi" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12" style="background:var(--bg-warm);border-top:1px solid var(--border);">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-10 mb-10">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fas fa-mug-hot" style="color:var(--bg);font-size:18px;"></i>
+                        </div>
+                        <span class="font-display text-xl font-bold" style="color:var(--fg);">Kopi Nusantara</span>
+                    </div>
+                    <p class="text-sm leading-relaxed max-w-sm" style="color:var(--fg-muted);">
+                        Menghadirkan kopi terbaik dari berbagai penjuru Nusantara, langsung dari petani ke cangkir Anda.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold mb-4" style="color:var(--fg);">Quick Links</h4>
+                    <div class="space-y-2">
+                        <a href="#beranda" class="block text-sm hover:text-[var(--accent)] transition-colors" style="color:var(--fg-muted);">Beranda</a>
+                        <a href="#tentang" class="block text-sm hover:text-[var(--accent)] transition-colors" style="color:var(--fg-muted);">Tentang</a>
+                        <a href="#menu" class="block text-sm hover:text-[var(--accent)] transition-colors" style="color:var(--fg-muted);">Menu</a>
+                        <a href="#kontak" class="block text-sm hover:text-[var(--accent)] transition-colors" style="color:var(--fg-muted);">Kontak</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold mb-4" style="color:var(--fg);">Ikuti Kami</h4>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:scale-110" style="background:var(--card);border:1px solid var(--border);color:var(--fg-muted);">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:scale-110" style="background:var(--card);border:1px solid var(--border);color:var(--fg-muted);">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                        <a href="https://wa.me/6289526804797" target="_blank" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:scale-110" style="background:var(--card);border:1px solid var(--border);color:var(--fg-muted);">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 text-center text-xs" style="border-top:1px solid var(--border);color:var(--fg-muted);">
+                &copy; 2024 Kopi Nusantara. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+    <div class="cart-panel" id="cartPanel">
+        <div class="p-6 flex items-center justify-between" style="border-bottom:1px solid var(--border);">
+            <h3 class="font-display text-xl font-bold" style="color:var(--fg);">
+                <i class="fas fa-shopping-bag mr-2" style="color:var(--accent);"></i> Keranjang
+            </h3>
+            <button onclick="closeCart()" style="color:var(--fg-muted);background:none;border:none;cursor:pointer;font-size:20px;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-6" id="cartItems"></div>
+        <div class="p-6" style="border-top:1px solid var(--border);">
+            <div class="flex justify-between mb-2">
+                <span class="text-sm" style="color:var(--fg-muted);">Subtotal (<span id="checkedCount">0</span> item)</span>
+                <span class="text-sm font-semibold" style="color:var(--fg);" id="cartSubtotal">Rp 0</span>
+            </div>
+            <div class="flex justify-between mb-4">
+                <span class="text-sm" style="color:var(--fg-muted);">Pajak (10%)</span>
+                <span class="text-sm font-semibold" style="color:var(--fg);" id="cartTax">Rp 0</span>
+            </div>
+            <div class="flex justify-between mb-6 pb-4" style="border-top:1px solid var(--border);">
+                <span class="text-base font-bold" style="color:var(--fg);">Total</span>
+                <span class="text-base font-bold" style="color:var(--accent);" id="cartTotal">Rp 0</span>
+            </div>
+            <button onclick="openCheckout()" class="btn-primary w-full py-4 rounded-xl text-sm flex items-center justify-center gap-2" id="checkoutBtn" disabled>
+                <i class="fas fa-lock"></i> Checkout Sekarang
+            </button>
+        </div>
+    </div>
+
+    <div class="checkout-overlay" id="checkoutOverlay">
+        <div class="checkout-modal">
+            <div class="p-6 pb-0">
+                <div class="flex items-center justify-center mb-6" id="stepIndicators">
+                    <div class="step-item active" data-step="1">
+                        <div class="step-circle">1</div>
+                        <span class="step-label hidden sm:inline">Info Pengiriman</span>
+                    </div>
+                    <div class="step-line" data-line="1"></div>
+                    <div class="step-item" data-step="2">
+                        <div class="step-circle">2</div>
+                        <span class="step-label hidden sm:inline">Pembayaran</span>
+                    </div>
+                    <div class="step-line" data-line="2"></div>
+                    <div class="step-item" data-step="3">
+                        <div class="step-circle">3</div>
+                        <span class="step-label hidden sm:inline">Konfirmasi</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 checkout-step" id="step1">
+                <h3 class="font-display text-xl font-bold mb-6" style="color:var(--fg);">Informasi Pengiriman</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium mb-2" style="color:var(--fg-muted);">Nama Lengkap</label>
+                        <input type="text" class="form-input" id="custName" placeholder="Masukkan nama lengkap">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-2" style="color:var(--fg-muted);">Nomor WhatsApp</label>
+                        <input type="tel" class="form-input" id="custPhone" placeholder="08xxxxxxxxxx">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-2" style="color:var(--fg-muted);">Metode Pesan</label>
+                        <div class="space-y-3" id="orderMethod">
+                            <div class="radio-card selected" onclick="selectOrderMethod('dine-in', this)">
+                                <div class="radio-dot"></div>
+                                <div>
+                                    <div class="text-sm font-semibold" style="color:var(--fg);">Dine-In</div>
+                                    <div class="text-xs" style="color:var(--fg-muted);">Makan di tempat</div>
+                                </div>
+                            </div>
+                            <div class="radio-card" onclick="selectOrderMethod('takeaway', this)">
+                                <div class="radio-dot"></div>
+                                <div>
+                                    <div class="text-sm font-semibold" style="color:var(--fg);">Take Away</div>
+                                    <div class="text-xs" style="color:var(--fg-muted);">Bawa pulang</div>
+                                </div>
+                            </div>
+                            <div class="radio-card" onclick="selectOrderMethod('delivery', this)">
+                                <div class="radio-dot"></div>
+                                <div>
+                                    <div class="text-sm font-semibold" style="color:var(--fg);">Delivery</div>
+                                    <div class="text-xs" style="color:var(--fg-muted);">Antar ke alamat (+Rp 10.000)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="addressField" style="display:none;">
+                        <label class="block text-xs font-medium mb-2" style="color:var(--fg-muted);">Alamat Lengkap</label>
+                        <textarea class="form-input" id="custAddress" rows="2" placeholder="Masukkan alamat lengkap"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-2" style="color:var(--fg-muted);">Catatan (opsional)</label>
+                        <input type="text" class="form-input" id="custNote" placeholder="Contoh: Less sugar, no ice">
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-8">
+                    <button onclick="closeCheckout()" class="btn-outline flex-1 py-3 rounded-xl text-sm">Batal</button>
+                    <button onclick="goToStep(2)" class="btn-primary flex-1 py-3 rounded-xl text-sm">Lanjutkan</button>
+                </div>
+            </div>
+
+            <div class="p-6 checkout-step" id="step2" style="display:none;">
+                <h3 class="font-display text-xl font-bold mb-6" style="color:var(--fg);">Metode Pembayaran</h3>
+                <div class="space-y-3" id="paymentMethod">
+                    <div class="radio-card selected" onclick="selectPayment('cash', this)">
+                        <div class="radio-dot"></div>
+                        <i class="fas fa-money-bill-wave text-lg" style="color:var(--accent);"></i>
+                        <div>
+                            <div class="text-sm font-semibold" style="color:var(--fg);">Bayar di Tempat (Cash)</div>
+                            <div class="text-xs" style="color:var(--fg-muted);">Bayar saat pesanan selesai</div>
+                        </div>
+                    </div>
+                    <div class="radio-card" onclick="selectPayment('qris', this)">
+                        <div class="radio-dot"></div>
+                        <i class="fas fa-qrcode text-lg" style="color:var(--accent);"></i>
+                        <div>
+                            <div class="text-sm font-semibold" style="color:var(--fg);">QRIS</div>
+                            <div class="text-xs" style="color:var(--fg-muted);">Scan QR untuk pembayaran</div>
+                        </div>
+                    </div>
+                    <div class="radio-card" onclick="selectPayment('transfer', this)">
+                        <div class="radio-dot"></div>
+                        <i class="fas fa-university text-lg" style="color:var(--accent);"></i>
+                        <div>
+                            <div class="text-sm font-semibold" style="color:var(--fg);">Transfer Bank</div>
+                            <div class="text-xs" style="color:var(--fg-muted);">BCA / Mandiri / BNI</div>
+                        </div>
+                    </div>
+                    <div class="radio-card" onclick="selectPayment('ewallet', this)">
+                        <div class="radio-dot"></div>
+                        <i class="fas fa-wallet text-lg" style="color:var(--accent);"></i>
+                        <div>
+                            <div class="text-sm font-semibold" style="color:var(--fg);">E-Wallet</div>
+                            <div class="text-xs" style="color:var(--fg-muted);">GoPay / OVO / DANA / ShopeePay</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 rounded-xl" style="background:var(--card);border:1px solid var(--border);">
+                    <div class="text-xs font-semibold mb-3" style="color:var(--fg-muted);">RINGKASAN PESANAN</div>
+                    <div id="checkoutSummaryItems" class="space-y-2 mb-3"></div>
+                    <div style="border-top:1px solid var(--border);" class="pt-3 mt-3">
+                        <div class="flex justify-between text-xs" style="color:var(--fg-muted);">
+                            <span>Subtotal</span>
+                            <span id="summarySubtotal">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-xs mt-1" style="color:var(--fg-muted);">
+                            <span>Pajak (10%)</span>
+                            <span id="summaryTax">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-xs mt-1" style="color:var(--fg-muted);">
+                            <span>Ongkir</span>
+                            <span id="summaryDelivery">Gratis</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-bold mt-2 pt-2" style="border-top:1px solid var(--border);color:var(--accent);">
+                            <span>Total</span>
+                            <span id="summaryTotal">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-8">
+                    <button onclick="goToStep(1)" class="btn-outline flex-1 py-3 rounded-xl text-sm">Kembali</button>
+                    <button onclick="goToStep(3)" class="btn-primary flex-1 py-3 rounded-xl text-sm">Bayar Sekarang</button>
+                </div>
+            </div>
+
+            <div class="p-6 checkout-step" id="step3" style="display:none;">
+                <div class="text-center py-8">
+                    <div class="success-check mx-auto mb-6">
+                        <svg class="checkmark-svg" viewBox="0 0 40 40">
+                            <path d="M10 20 L18 28 L30 12"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold mb-3" style="color:var(--fg);">Pesanan Berhasil!</h3>
+                    <p class="text-sm mb-2" style="color:var(--fg-muted);">Terima kasih telah memesan di Kopi Nusantara</p>
+                    <div class="inline-block px-4 py-2 rounded-lg mt-2 mb-6" style="background:var(--card);border:1px solid var(--border);">
+                        <span class="text-xs" style="color:var(--fg-muted);">No. Pesanan: </span>
+                        <span class="text-sm font-bold" style="color:var(--accent);" id="orderNumber">KN-000000</span>
+                    </div>
+                    <div class="text-left p-4 rounded-xl mb-6 mx-auto max-w-sm" style="background:var(--card);border:1px solid var(--border);">
+                        <div class="text-xs font-semibold mb-3" style="color:var(--fg-muted);">DETAIL PESANAN</div>
+                        <div id="confirmDetails" class="space-y-2 text-sm"></div>
+                    </div>
+                    <div class="flex flex-col gap-3 max-w-sm mx-auto">
+                        <button onclick="publishToGitHub()" class="publish-banner px-6 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer" style="color:var(--success);">
+                            <i class="fab fa-github"></i> Publish ke GitHub Pages
+                        </button>
+                        <button onclick="resetAndClose()" class="btn-primary px-6 py-3 rounded-xl text-sm">
+                            Pesan Lagi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var menuData = [
+        { id: 1, name: "Espresso", category: "kopi", price: 22000, desc: "Shot espresso murni dari biji Arabika pilihan", img: "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=400&h=300&fit=crop&auto=format&q=80", badge: "Best Seller" },
+        { id: 2, name: "Americano", category: "kopi", price: 25000, desc: "Espresso dengan air panas, rasa bold dan clean", img: "https://images.unsplash.com/photo-1551030173-122aabc4489c?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 3, name: "Cappuccino", category: "kopi", price: 32000, desc: "Espresso, steamed milk, dan foam lembut", img: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop&auto=format&q=80", badge: "Favorit" },
+        { id: 4, name: "Latte Art", category: "kopi", price: 35000, desc: "Latte dengan latte art cantik oleh barista kami", img: "https://images.unsplash.com/photo-1534778101976-62847782c213?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 5, name: "Kopi Susu Gula Aren", category: "kopi", price: 28000, desc: "Kopi susu dengan gula aren asli, manisnya pas", img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop&auto=format&q=80", badge: "Best Seller" },
+        { id: 6, name: "V60 Single Origin", category: "kopi", price: 38000, desc: "Manual brew dari biji single origin terbaik", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop&auto=format&q=80", badge: "Premium" },
+        { id: 7, name: "Affogato", category: "kopi", price: 35000, desc: "Espresso dituang di atas gelato vanilla", img: "https://images.unsplash.com/photo-1579992357154-faf4bde95b3d?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 8, name: "Matcha Latte", category: "non-kopi", price: 30000, desc: "Matcha premium Jepang dengan susu segar", img: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=400&h=300&fit=crop&auto=format&q=80", badge: "Favorit" },
+        { id: 9, name: "Chocolate Bliss", category: "non-kopi", price: 32000, desc: "Cokelat Belgia hangat dengan whipped cream", img: "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 10, name: "Fresh Juice", category: "non-kopi", price: 25000, desc: "Jus segar pilihan: jeruk, mangga, atau semangka", img: "https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 11, name: "Teh Tarik", category: "non-kopi", price: 22000, desc: "Teh tarik khas dengan foam tebal dan creamy", img: "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 12, name: "Lemon Tea", category: "non-kopi", price: 20000, desc: "Teh segar dengan irisan lemon dan madu", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 13, name: "Nasi Goreng Spesial", category: "makanan", price: 35000, desc: "Nasi goreng dengan telur, ayam, dan kerupuk", img: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=300&fit=crop&auto=format&q=80", badge: "Favorit" },
+        { id: 14, name: "Indomie Rebus Spesial", category: "makanan", price: 22000, desc: "Indomie rebus dengan telur dan sayuran segar", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 15, name: "Croissant Butter", category: "makanan", price: 25000, desc: "Croissant renyah dengan butter premium Prancis", img: "https://z-cdn-media.chatglm.cn/files/bbcde7fc-08dc-42d3-9a07-a55e97ee575c.jpeg?auth_key=1876773447-d0f017f1b3e94dc4b9d0ecc413459025-0-991067c7de33ee65b30ef5874ce61b64", badge: null },
+        { id: 16, name: "Chicken Sandwich", category: "makanan", price: 38000, desc: "Sandwich ayam panggang dengan sayuran dan saus", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 17, name: "French Fries", category: "makanan", price: 22000, desc: "Kentang goreng crispy dengan saus sambal mayo", img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 18, name: "Pancake Stack", category: "dessert", price: 35000, desc: "Tumpukan pancake lembut dengan maple syrup", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop&auto=format&q=80", badge: "Favorit" },
+        { id: 19, name: "Brownies Cokelat", category: "dessert", price: 28000, desc: "Brownies cokelat lembap dengan topping almond", img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=300&fit=crop&auto=format&q=80", badge: null },
+        { id: 20, name: "Banana Split", category: "dessert", price: 32000, desc: "Pisang dengan es krim vanilla, cokelat, dan strawberry", img: "https://z-cdn-media.chatglm.cn/files/ee1ccd27-5762-47a1-8a35-269f3b5e44eb.jpeg?auth_key=1876773447-023fa8fd7c594160a09bc86ae076ddce-0-b26bcfde547d551172ebb46f415c66df", badge: null }
+    ];
+
+    var cart = [];
+    var currentStep = 1;
+    var selectedOrderMethod = 'dine-in';
+    var selectedPayment = 'cash';
+
+    function formatRp(num) {
+        return 'Rp ' + num.toLocaleString('id-ID');
+    }
+
+    function showToast(message, icon, color) {
+        icon = icon || 'fa-check-circle';
+        color = color || 'var(--success)';
+        var container = document.getElementById('toastContainer');
+        var toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = '<i class="fas ' + icon + '" style="color:' + color + ';font-size:18px;"></i> ' + message;
+        container.appendChild(toast);
+        setTimeout(function() { toast.remove(); }, 3000);
+    }
+
+    function getCheckedItems() { return cart.filter(function(c) { return c.checked; }); }
+
+    function addPromoToCart() {
+        var existing = cart.find(function(c) { return c.id === 99; });
+        if (existing) { existing.qty++; } else { cart.push({ id: 99, name: "Paket Hemat Lemon Tea + Mie Rebus", price: 30000, img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=200&fit=crop&auto=format&q=80", qty: 1, checked: true }); }
+        updateCart();
+        showToast('Paket Hemat ditambahkan ke keranjang!');
+    }
+
+    function renderMenu(category) {
+        category = category || 'semua';
+        var grid = document.getElementById('menuGrid');
+        var filtered = category === 'semua' ? menuData : menuData.filter(function(i) { return i.category === category; });
+        grid.innerHTML = filtered.map(function(item) {
+            var badgeHtml = item.badge ? '<span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold" style="background:var(--accent);color:var(--bg);">' + item.badge + '</span>' : '';
+            return '<div class="menu-card rounded-2xl overflow-hidden" style="background:var(--card);">' +
+                '<div class="relative overflow-hidden" style="height:200px;">' +
+                    '<img src="' + item.img + '" alt="' + item.name + '" class="card-img w-full h-full object-cover">' + badgeHtml +
+                '</div>' +
+                '<div class="p-5">' +
+                    '<h3 class="font-display text-lg font-bold mb-1" style="color:var(--fg);">' + item.name + '</h3>' +
+                    '<p class="text-xs mb-4 leading-relaxed" style="color:var(--fg-muted);">' + item.desc + '</p>' +
+                    '<span class="font-display text-lg font-bold" style="color:var(--accent);">' + formatRp(item.price) + '</span>' +
+                    '<div class="flex gap-2 mt-4">' +
+                        '<button onclick="addToCart(' + item.id + ')" class="btn-outline flex-1 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2"><i class="fas fa-cart-plus"></i> Keranjang</button>' +
+                        '<button onclick="buyNow(' + item.id + ')" class="btn-primary flex-1 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2"><i class="fas fa-bolt"></i> Beli Sekarang</button>' +
+                    '</div>' +
+                '</div></div>';
+        }).join('');
+    }
+
+    function filterMenu(category, btn) {
+        document.querySelectorAll('.cat-tab').forEach(function(t) { t.classList.remove('active'); });
+        btn.classList.add('active');
+        renderMenu(category);
+    }
+
+    function addToCart(id) {
+        var item = menuData.find(function(i) { return i.id === id; });
+        var existing = cart.find(function(c) { return c.id === id; });
+        if (existing) { existing.qty++; } else { cart.push({ id: item.id, name: item.name, price: item.price, img: item.img, qty: 1, checked: true }); }
+        updateCart();
+        showToast(item.name + ' ditambahkan ke keranjang');
+    }
+
+    function buyNow(id) {
+        var item = menuData.find(function(i) { return i.id === id; });
+        var existing = cart.find(function(c) { return c.id === id; });
+        if (existing) { existing.qty++; } else { cart.push({ id: item.id, name: item.name, price: item.price, img: item.img, qty: 1, checked: true }); }
+        updateCart();
+        openCart();
+        setTimeout(function() { closeCart(); setTimeout(function() { openCheckout(); }, 300); }, 500);
+    }
+
+    function toggleCartItem(id, cb) {
+        var item = cart.find(function(c) { return c.id === id; });
+        if (item) item.checked = cb.checked;
+        updateCart();
+    }
+
+    function toggleAllCart(cb) {
+        cart.forEach(function(c) { c.checked = cb.checked; });
+        updateCart();
+    }
+
+    function updateCart() {
+        var badge = document.getElementById('cartBadge');
+        var totalItems = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+        if (totalItems > 0) { badge.style.display = 'flex'; badge.textContent = totalItems; badge.classList.remove('bump'); void badge.offsetWidth; badge.classList.add('bump'); }
+        else { badge.style.display = 'none'; }
+
+        var checked = getCheckedItems();
+        var subtotal = checked.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+        var tax = Math.round(subtotal * 0.1);
+        var delivery = selectedOrderMethod === 'delivery' ? 10000 : 0;
+        var total = subtotal + tax + delivery;
+
+        document.getElementById('checkedCount').textContent = checked.reduce(function(s, i) { return s + i.qty; }, 0);
+        document.getElementById('cartSubtotal').textContent = formatRp(subtotal);
+        document.getElementById('cartTax').textContent = formatRp(tax);
+        document.getElementById('cartTotal').textContent = formatRp(total);
+
+        var el = document.getElementById('cartItems');
+        if (cart.length === 0) {
+            el.innerHTML = '<div class="text-center py-16"><i class="fas fa-shopping-bag text-4xl mb-4" style="color:var(--border);"></i><p class="text-sm" style="color:var(--fg-muted);">Keranjang masih kosong</p></div>';
+            document.getElementById('checkoutBtn').disabled = true;
+        } else {
+            var allChecked = cart.every(function(c) { return c.checked; });
+            el.innerHTML =
+                '<div class="flex items-center justify-between mb-4 pb-3" style="border-bottom:1px solid var(--border);">' +
+                    '<label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="cart-checkbox" ' + (allChecked ? 'checked' : '') + ' onchange="toggleAllCart(this)"><span class="text-xs font-medium" style="color:var(--fg-muted);">Pilih Semua</span></label>' +
+                    '<span class="text-xs" style="color:var(--accent);">' + checked.reduce(function(s, i) { return s + i.qty; }, 0) + ' dipilih</span>' +
+                '</div>' +
+                cart.map(function(item) {
+                    var uncheckedClass = item.checked ? '' : ' cart-item-unchecked';
+                    return '<div class="flex gap-3 mb-4 pb-4' + uncheckedClass + '" style="border-bottom:1px solid var(--border);">' +
+                        '<input type="checkbox" class="cart-checkbox mt-1" ' + (item.checked ? 'checked' : '') + ' onchange="toggleCartItem(' + item.id + ', this)">' +
+                        '<img src="' + item.img + '" class="w-14 h-14 rounded-xl object-cover flex-shrink-0" style="border:1px solid var(--border);">' +
+                        '<div class="flex-1 min-w-0"><h4 class="text-sm font-semibold truncate" style="color:var(--fg);">' + item.name + '</h4>' +
+                        '<p class="text-xs mt-0.5" style="color:var(--accent);">' + formatRp(item.price) + '</p>' +
+                        '<div class="flex items-center justify-between mt-2"><div class="flex items-center gap-2">' +
+                        '<button class="qty-btn" onclick="changeQty(' + item.id + ',-1)"><i class="fas fa-minus" style="font-size:10px;"></i></button>' +
+                        '<span class="text-sm font-semibold w-6 text-center" style="color:var(--fg);">' + item.qty + '</span>' +
+                        '<button class="qty-btn" onclick="changeQty(' + item.id + ',1)"><i class="fas fa-plus" style="font-size:10px;"></i></button></div>' +
+                        '<button onclick="removeFromCart(' + item.id + ')" style="color:var(--fg-muted);background:none;border:none;cursor:pointer;"><i class="fas fa-trash text-xs"></i></button></div></div></div>';
+                }).join('');
+            document.getElementById('checkoutBtn').disabled = checked.length === 0;
+        }
+    }
+
+    function changeQty(id, delta) {
+        var item = cart.find(function(c) { return c.id === id; });
+        if (item) { item.qty += delta; if (item.qty <= 0) cart = cart.filter(function(c) { return c.id !== id; }); }
+        updateCart();
+    }
+
+    function removeFromCart(id) {
+        var item = cart.find(function(c) { return c.id === id; });
+        cart = cart.filter(function(c) { return c.id !== id; });
+        updateCart();
+        if (item) showToast(item.name + ' dihapus', 'fa-trash', 'var(--danger)');
+    }
+
+    function openCart() { document.getElementById('cartOverlay').classList.add('open'); document.getElementById('cartPanel').classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeCart() { document.getElementById('cartOverlay').classList.remove('open'); document.getElementById('cartPanel').classList.remove('open'); document.body.style.overflow = ''; }
+
+    function openCheckout() {
+        var checked = getCheckedItems();
+        if (!checked.length) { showToast('Pilih item yang mau di-checkout', 'fa-exclamation-circle', 'var(--danger)'); return; }
+        closeCart();
+        setTimeout(function() {
+            currentStep = 1; updateStepUI();
+            document.querySelectorAll('.checkout-step').forEach(function(s) { s.style.display = 'none'; });
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('checkoutOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+            updateCheckoutSummary();
+        }, 300);
+    }
+
+    function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+
+    function updateStepUI() {
+        document.querySelectorAll('.step-item').forEach(function(el) {
+            var s = parseInt(el.dataset.step); el.classList.remove('active', 'done');
+            if (s === currentStep) el.classList.add('active'); else if (s < currentStep) el.classList.add('done');
+            var c = el.querySelector('.step-circle');
+            c.innerHTML = s < currentStep ? '<i class="fas fa-check" style="font-size:14px;"></i>' : s;
+        });
+        document.querySelectorAll('.step-line').forEach(function(el) { el.classList.toggle('done', parseInt(el.dataset.line) < currentStep); });
+    }
+
+    function goToStep(step) {
+        if (step === 2 && currentStep === 1) {
+            var n = document.getElementById('custName').value.trim();
+            var p = document.getElementById('custPhone').value.trim();
+            if (!n) { showToast('Nama lengkap harus diisi', 'fa-exclamation-circle', 'var(--danger)'); return; }
+            if (!p || p.length < 10) { showToast('Nomor WhatsApp tidak valid', 'fa-exclamation-circle', 'var(--danger)'); return; }
+            if (selectedOrderMethod === 'delivery' && !document.getElementById('custAddress').value.trim()) { showToast('Alamat harus diisi untuk delivery', 'fa-exclamation-circle', 'var(--danger)'); return; }
+        }
+        currentStep = step; updateStepUI();
+        document.querySelectorAll('.checkout-step').forEach(function(s) { s.style.display = 'none'; });
+        document.getElementById('step' + step).style.display = 'block';
+        if (step === 2) updateCheckoutSummary();
+        if (step === 3) finalizeOrder();
+    }
+
+    function selectOrderMethod(m, el) {
+        selectedOrderMethod = m;
+        document.querySelectorAll('#orderMethod .radio-card').forEach(function(c) { c.classList.remove('selected'); });
+        el.classList.add('selected');
+        document.getElementById('addressField').style.display = m === 'delivery' ? 'block' : 'none';
+        updateCart();
+    }
+
+    function selectPayment(m, el) {
+        selectedPayment = m;
+        document.querySelectorAll('#paymentMethod .radio-card').forEach(function(c) { c.classList.remove('selected'); });
+        el.classList.add('selected');
+    }
+
+    function updateCheckoutSummary() {
+        var checked = getCheckedItems();
+        var subtotal = checked.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+        var tax = Math.round(subtotal * 0.1);
+        var delivery = selectedOrderMethod === 'delivery' ? 10000 : 0;
+        document.getElementById('checkoutSummaryItems').innerHTML = checked.map(function(item) {
+            return '<div class="flex justify-between text-xs"><span style="color:var(--fg-muted);">' + item.name + ' x' + item.qty + '</span><span style="color:var(--fg);">' + formatRp(item.price * item.qty) + '</span></div>';
+        }).join('');
+        document.getElementById('summarySubtotal').textContent = formatRp(subtotal);
+        document.getElementById('summaryTax').textContent = formatRp(tax);
+        document.getElementById('summaryDelivery').textContent = delivery ? formatRp(delivery) : 'Gratis';
+        document.getElementById('summaryTotal').textContent = formatRp(subtotal + tax + delivery);
+    }
+
+    function finalizeOrder() {
+        document.getElementById('orderNumber').textContent = 'KN-' + Date.now().toString().slice(-6);
+        var checked = getCheckedItems();
+        var subtotal = checked.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+        var tax = Math.round(subtotal * 0.1);
+        var delivery = selectedOrderMethod === 'delivery' ? 10000 : 0;
+        var total = subtotal + tax + delivery;
+        var ml = { 'dine-in': 'Dine-In', 'takeaway': 'Take Away', 'delivery': 'Delivery' };
+        var pl = { 'cash': 'Cash', 'qris': 'QRIS', 'transfer': 'Transfer Bank', 'ewallet': 'E-Wallet' };
+        document.getElementById('confirmDetails').innerHTML =
+            '<div class="flex justify-between" style="color:var(--fg-muted);"><span>Nama</span><span style="color:var(--fg);">' + document.getElementById('custName').value + '</span></div>' +
+            '<div class="flex justify-between" style="color:var(--fg-muted);"><span>WhatsApp</span><span style="color:var(--fg);">' + document.getElementById('custPhone').value + '</span></div>' +
+            '<div class="flex justify-between" style="color:var(--fg-muted);"><span>Metode</span><span style="color:var(--fg);">' + ml[selectedOrderMethod] + '</span></div>' +
+            '<div class="flex justify-between" style="color:var(--fg-muted);"><span>Pembayaran</span><span style="color:var(--fg);">' + pl[selectedPayment] + '</span></div>' +
+            '<div class="flex justify-between pt-2 mt-2 font-bold" style="border-top:1px solid var(--border);color:var(--accent);"><span>Total Bayar</span><span>' + formatRp(total) + '</span></div>';
+    }
+
+    function resetAndClose() {
+        cart = cart.filter(function(c) { return !c.checked; });
+        cart.forEach(function(c) { c.checked = true; });
+        updateCart(); closeCheckout();
+        document.getElementById('custName').value = '';
+        document.getElementById('custPhone').value = '';
+        document.getElementById('custAddress').value = '';
+        document.getElementById('custNote').value = '';
+        selectedOrderMethod = 'dine-in'; selectedPayment = 'cash';
+        document.querySelectorAll('#orderMethod .radio-card').forEach(function(c, i) { c.classList.toggle('selected', i === 0); });
+        document.querySelectorAll('#paymentMethod .radio-card').forEach(function(c, i) { c.classList.toggle('selected', i === 0); });
+        document.getElementById('addressField').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function publishToGitHub() {
+        showToast('Membuka panduan GitHub Pages...', 'fa-github', 'var(--accent)');
+        setTimeout(function() {
+            window.open('https://github.com/new', '_blank');
+            showToast('Buat repo baru, upload file ini, lalu aktifkan Pages di Settings > Pages > Source: main branch', 'fa-info-circle', 'var(--accent)');
+        }, 500);
+    }
+
+    function createParticles() {
+        var c = document.getElementById('particles');
+        for (var i = 0; i < 30; i++) {
+            var p = document.createElement('div'); p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = (50 + Math.random() * 50) + '%';
+            p.style.animationDelay = Math.random() * 8 + 's';
+            p.style.animationDuration = (6 + Math.random() * 6) + 's';
+            var sz = (2 + Math.random() * 3) + 'px'; p.style.width = sz; p.style.height = sz;
+            c.appendChild(p);
+        }
+    }
+
+    function animateCounters() {
+        document.querySelectorAll('[data-count]').forEach(function(el) {
+            var target = parseFloat(el.dataset.count), isFloat = target % 1 !== 0, start = performance.now();
+            function update(now) {
+                var progress = Math.min((now - start) / 2000, 1), eased = 1 - Math.pow(1 - progress, 3), cur = eased * target;
+                if (isFloat) el.textContent = cur.toFixed(1);
+                else if (target >= 1000) el.textContent = Math.floor(cur).toLocaleString('id-ID') + '+';
+                else el.textContent = Math.floor(cur) + '+';
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        });
+    }
+
+    function initScrollReveal() {
+        var obs = new IntersectionObserver(function(entries) { entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+    }
+
+    function initNavbar() { window.addEventListener('scroll', function() { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50); }); }
+    function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+
+    function initWATooltip() {
+        var btn = document.getElementById('waFloat'), tip = document.getElementById('waTooltip'), shown = false;
+        btn.addEventListener('mouseenter', function() { tip.classList.add('show'); });
+        btn.addEventListener('mouseleave', function() { tip.classList.remove('show'); });
+        setTimeout(function() { if (!shown) { tip.classList.add('show'); shown = true; setTimeout(function() { tip.classList.remove('show'); }, 3000); } }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMenu(); createParticles(); animateCounters(); initScrollReveal(); initNavbar(); initWATooltip(); updateCart();
+    });
+    </script>
+</body>
+</html>
